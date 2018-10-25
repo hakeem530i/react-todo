@@ -47,16 +47,16 @@ class App extends Component {
     return (
       <main className="App">
         <div className="w-100">
-          <div className="container center w-50">
-            <div className="w-70 tl center pa3">
+          <div className="container center vh-100 h-auto-l w-100-ns w-50-l">
+            <div className="w-70-l tl center pa3">
               <h1 className="fl">To-Do List</h1>
             </div>
-            <div className="w-70 center">
+            <div className="w-70-l center">
               <input
                 onChange={event => {
                   this.setState({ currentItem: event.target.value });
                 }}
-                className="pa3 w-70"
+                className="pa3 ba0 ba b--light-gray w-70"
                 placeholder="Type and press enter to save"
                 type="text"
                 value={this.state.currentItem}
@@ -67,9 +67,9 @@ class App extends Component {
               </button>
             </div>
 
-            <ul className="w-70 tl center pa3">
+            <ul className="w-70 tl center pa3-l">
               {this.state.notes.map(note => (
-                <li className="list pt3">
+                <li className="list pt3-l">
                   {note}
                   <button onClick={this.deleteNote}>Delete</button>
                 </li>
