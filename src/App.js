@@ -68,12 +68,22 @@ class App extends Component {
               </button>
             </div>
 
-            <ul className="w-70 tl center pa3-l">
+            <ul className="w-70 tl center pa3-l mt0">
+              <p className="ma0 pb3">You have the following due: </p>
               {this.state.notes.map(note => (
-                <li className="list pt3-l">
-                  {note}
-                  <button onClick={this.deleteNote}>Delete</button>
-                </li>
+                <div>
+                  <li className="list bt b--light-gray pv3-l">
+                    <div className="fl mr2 round">
+                      <input
+                        onClick={this.deleteNote}
+                        type="checkbox"
+                        id="checkbox"
+                      />
+                      <label for="checkbox" />
+                    </div>
+                    {note}
+                  </li>
+                </div>
               ))}
             </ul>
           </div>
