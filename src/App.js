@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import "./App.css";
 // import { throws } from "assert";
 // import { join } from "upath";
+import { hot } from "react-hot-loader";
 
 class App extends Component {
   constructor(props) {
@@ -56,13 +57,13 @@ class App extends Component {
                 onChange={event => {
                   this.setState({ currentItem: event.target.value });
                 }}
-                className="pa3 ba0 ba b--light-gray w-70"
+                className="pa2 ba0 ba b--light-gray w-70"
                 placeholder="Type and press enter to save"
                 type="text"
                 value={this.state.currentItem}
                 required
               />
-              <button className="btn pa3" onClick={this.saveClick}>
+              <button className="btn pa2" onClick={this.saveClick}>
                 Add Task
               </button>
             </div>
@@ -82,4 +83,5 @@ class App extends Component {
   }
 }
 
-export default App;
+//export default App;
+export default hot(module)(App);
