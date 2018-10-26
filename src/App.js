@@ -4,6 +4,8 @@ import "./App.css";
 // import { throws } from "assert";
 // import { join } from "upath";
 import { hot } from "react-hot-loader";
+import { NoteList } from "./components/NoteList";
+import { TaskBox } from "./components/TaskBox";
 import axios from "axios";
 
 class App extends Component {
@@ -11,23 +13,39 @@ class App extends Component {
     super();
     this.state = {
       currentItem: "",
-      notes: []
+      notes: [],
+      responseLength: 0
     };
   }
-  componentDidMount() {
+
+  fetchNotes = () => {
     axios
       .get("https://5bd22342bded6100135c303c.mockapi.io/notes")
-      .then(function(response) {
-        console.log(response);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-  }
-  keyPressEvent = () => {
-    //this.setState({ currentItem: event.target.value });
-    console.log(this.state.currentItem);
+      .then(response =>
+        this.setState(
+          {
+            notes: response.data,
+            responseLength: response.data.length
+          },
+          console.log(response.data)
+        )
+      )
+      .catch(error => console.log(error));
   };
+  componentDidMount() {
+    this.fetchNotes();
+  }
+
+  componentDidUpdate() {
+    // alert("Component updated");
+
+    //If a new note is saved/deleted update state
+    if (this.state.notes.length !== this.state.responseLength) {
+      this.fetchNotes();
+    } else {
+      console.log("fixed");
+    }
+  }
 
   //Add Note button
   addButton = () => {
@@ -37,19 +55,23 @@ class App extends Component {
   //Save button click
   saveClick = () => {
     var joined = this.state.notes.concat(this.state.currentItem);
-    console.log(this.state.currentItem);
+    let { currentItem } = this.state;
 
     //If field isn't empty
     if (this.state.currentItem.length > 0) {
-      this.setState(
-        {
-          notes: joined
-        },
-        () => this.setState({ currentItem: "" })
+      this.setState({ notes: joined }, () =>
+        this.setState({ currentItem: "" })
       );
-      console.log(`Current item is: ${this.state.currentItem.length}`);
+      axios.post(
+        "https://5bd22342bded6100135c303c.mockapi.io/notes/",
+        {
+          Note: `${currentItem}`
+        },
+        //Refresh after saved
+        this.fetchNotes()
+      );
     } else {
-      alert("Enter text");
+      alert("ERROR");
     }
   };
   deleteNote = () => {
@@ -66,37 +88,14 @@ class App extends Component {
             <div className="w-70-l tl center pa3">
               <h1 className="fl">To-Do List</h1>
             </div>
-            <div className="w-70-l center">
-              <input
-                onChange={this.inputOnChange}
-                className="pa2 ba0 ba b--light-gray w-70"
-                placeholder="Type and press enter to save"
-                type="text"
-                value={this.state.currentItem}
-                required
-              />
-              <button className="btn pa2" onClick={this.saveClick}>
-                Add Task
-              </button>
-            </div>
+            <TaskBox
+              currentItem={this.state.currentItem}
+              onTextInput={this.inputOnChange}
+              taskButtonClick={this.saveClick}
+            />
 
-            <ul className="w-70 tl center pa3-l mt0">
-              <p className="ma0 pb3">You have the following due: </p>
-              {this.state.notes.map(note => (
-                <div>
-                  <li className="list bt b--light-gray pv3-l">
-                    <div className="fl mr2 round">
-                      <input
-                        onClick={this.deleteNote}
-                        type="checkbox"
-                        id="checkbox"
-                      />
-                      <label for="checkbox" />
-                    </div>
-                    {note}
-                  </li>
-                </div>
-              ))}
+            <ul className="overflow-hidden w-70-l tl center pa3-l pl0 mt0">
+              <NoteList onClick={this.deleteNote} notes={this.state.notes} />
             </ul>
           </div>
         </div>

@@ -54,7 +54,7 @@ body {
 .round input[type="checkbox"]:checked + label:after {
   opacity: 1;
 }
-#checkbox {
+[id^="checkbox"] {
   height: 24px;
   width: 24px;
 }
