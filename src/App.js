@@ -4,6 +4,7 @@ import "./App.css";
 // import { throws } from "assert";
 // import { join } from "upath";
 import { hot } from "react-hot-loader";
+import axios from "axios";
 
 class App extends Component {
   constructor(props) {
@@ -12,6 +13,16 @@ class App extends Component {
       currentItem: "",
       notes: []
     };
+  }
+  componentDidMount() {
+    axios
+      .get("https://5bd22342bded6100135c303c.mockapi.io/notes")
+      .then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   }
   keyPressEvent = () => {
     //this.setState({ currentItem: event.target.value });
@@ -44,6 +55,9 @@ class App extends Component {
   deleteNote = () => {
     alert("Delete");
   };
+  inputOnChange = event => {
+    this.setState({ currentItem: event.target.value });
+  };
   render() {
     return (
       <main className="App">
@@ -54,9 +68,7 @@ class App extends Component {
             </div>
             <div className="w-70-l center">
               <input
-                onChange={event => {
-                  this.setState({ currentItem: event.target.value });
-                }}
+                onChange={this.inputOnChange}
                 className="pa2 ba0 ba b--light-gray w-70"
                 placeholder="Type and press enter to save"
                 type="text"
